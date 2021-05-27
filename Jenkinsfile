@@ -20,15 +20,15 @@ pipeline {
             steps {
                 echo 'build module'
 
-                sh './echo_shell.sh $ACCESS_KEY'
+                //sh './echo_shell.sh $ACCESS_KEY'
 
-                //sh '''
-                //    docker run --rm \
-                //        -v $(pwd)/aws:/aws \
-                //        -e AWS_ACCESS_KEY_ID=$ACCESS_KEY \
-                //        -e AWS_SECRET_ACCESS_KEY=$SECRET_KEY \
-                //        amazon/aws-cli:latest  --version
-                //'''
+                sh '''
+                    docker run --rm \
+                        -v $(pwd)/aws:/aws \
+                        -e AWS_ACCESS_KEY_ID=$ACCESS_KEY \
+                        -e AWS_SECRET_ACCESS_KEY=$SECRET_KEY \
+                        amazon/aws-cli:latest  --version
+                '''
 
                 //sh './sample/template/jenkins/run_maven_build.sh'
             }
@@ -56,6 +56,15 @@ pipeline {
          * Register Container Image to ECR
          */ 
         stage('Register Image') {
+            environment {
+                DOCKER_LOGIN_CREDENTIAL = sh(script: '''
+                    docker run --rm \
+                        -v $(pwd)/aws:/aws \
+                        -e AWS_ACCESS_KEY_ID=$ACCESS_KEY \
+                        -e AWS_SECRET_ACCESS_KEY=$SECRET_KEY \
+                        amazon/aws-cli:latest ecr get-login-password --region ap-northeast-1
+                ''', returnStdout: true).trim()
+            }
             steps {
                 echo 'register image'
                 // aws の設定を明示的にコマンドで渡す方法を調べる
