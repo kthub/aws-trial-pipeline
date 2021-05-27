@@ -1,8 +1,6 @@
 #!/usr/bin/env groovy
 pipeline {
-    agent {
-        label 'ssh-slaves'
-    }
+    agent any
 
     environment {
         appName = 'rest-demo'
