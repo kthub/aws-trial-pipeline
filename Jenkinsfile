@@ -19,13 +19,16 @@ pipeline {
         stage('Build Module') {
             steps {
                 echo 'build module'
-                sh '''
-                    docker run --rm \
-                        -v $(pwd)/aws:/aws \
-                        -e AWS_ACCESS_KEY_ID=$ACCESS_KEY \
-                        -e AWS_SECRET_ACCESS_KEY=$SECRET_KEY \
-                        amazon/aws-cli:latest  --version
-                '''
+
+                sh 'echo_shell.sh $ACCESS_KEY'
+
+                //sh '''
+                //    docker run --rm \
+                //        -v $(pwd)/aws:/aws \
+                //        -e AWS_ACCESS_KEY_ID=$ACCESS_KEY \
+                //        -e AWS_SECRET_ACCESS_KEY=$SECRET_KEY \
+                //        amazon/aws-cli:latest  --version
+                //'''
 
                 //sh './sample/template/jenkins/run_maven_build.sh'
             }
