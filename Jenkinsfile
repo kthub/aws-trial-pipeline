@@ -19,7 +19,7 @@ pipeline {
         stage('Build Module') {
             steps {
                 echo 'build module'
-                sh 'echo_shell.sh $ACCESS_KEY'
+                sh './echo_shell.sh $ACCESS_KEY'
                 //sh './sample/template/jenkins/run_maven_build.sh'
             }
         }
