@@ -9,8 +9,8 @@ pipeline {
         appVersion = '1.0.0'
 
         // aws cli credentials
-        ACCESS_KEY = credentials('aws-dvo-access-token')
-        SECRET_KEY = credentials('aws-dvo-secret-token')
+        ACCESS_KEY = credentials('aws-dvo-access-key')
+        SECRET_KEY = credentials('aws-dvo-secret-key')
         REGION = "ap-northeast-1"
     }
 
@@ -20,7 +20,9 @@ pipeline {
          */
         stage('Build Module') {
             steps {
-                sh './sample/template/jenkins/run_maven_build.sh'
+                echo 'build module'
+                echo "${ACCESS_KEY}"
+                //sh './sample/template/jenkins/run_maven_build.sh'
             }
         }
 
@@ -34,10 +36,11 @@ pipeline {
                 IMAGE_TAG = 'v1'
             }
             steps {
-                sh "cp ${BUILD_ARTIFACT} samples/template/container/src"
-                dir('samples/template/container/src') {
-                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-                }
+                echo 'build image'
+                //sh "cp ${BUILD_ARTIFACT} samples/template/container/src"
+                //dir('samples/template/container/src') {
+                //    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                //}
             }
         }
 
@@ -50,30 +53,27 @@ pipeline {
 
             }
             steps {
-
+                echo 'register image'
                 // aws の設定を明示的にコマンドで渡す方法を調べる
 
 
                 // aws login して token 取得？ or token を取得しておいて Jenkins に設定？
 
-                sh "docker login --username AWS --password ???? 572065744477.dkr.ecr.ap-northeast-1.amazonaws.com"
-                sh "docker tag rest-demo:latest 572065744477.dkr.ecr.ap-northeast-1.amazonaws.com/rest-demo:latest"
-                sh "docker push 572065744477.dkr.ecr.ap-northeast-1.amazonaws.com/rest-demo:latest"
-                sh "docker logout"
+                //sh "docker login --username AWS --password ???? 572065744477.dkr.ecr.ap-northeast-1.amazonaws.com"
+                //sh "docker tag rest-demo:latest 572065744477.dkr.ecr.ap-northeast-1.amazonaws.com/rest-demo:latest"
+                //sh "docker push 572065744477.dkr.ecr.ap-northeast-1.amazonaws.com/rest-demo:latest"
+                //sh "docker logout"
             }
         }
         /*
          * Rollout (update service)
          */ 
         stage('Rollout') {
-            environment {
-
-            }
             steps {
-
+                echo 'rollout'
                 // aws login しておいて credential をあらかじめ登録しておく？
 
-                sh "aws ecs update-service --cluster <cluster_name> --service <service_name> --force-new-deployment"
+                //sh "aws ecs update-service --cluster <cluster_name> --service <service_name> --force-new-deployment"
             }
         }
     }
