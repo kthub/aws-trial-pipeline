@@ -19,7 +19,7 @@ pipeline {
         stage('Build Module') {
             steps {
                 echo 'build module'
-                echo '$ACCESS_KEY'
+                sh 'echo_shell.sh $ACCESS_KEY'
                 //sh './sample/template/jenkins/run_maven_build.sh'
             }
         }
@@ -46,10 +46,6 @@ pipeline {
          * Register Container Image to ECR
          */ 
         stage('Register Image') {
-            environment {
-                ACCESS_TOKEN = credentials('aws-dvo-test-cicd-token')
-
-            }
             steps {
                 echo 'register image'
                 // aws の設定を明示的にコマンドで渡す方法を調べる
