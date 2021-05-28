@@ -16,6 +16,7 @@ pipeline {
     stages {
         stage('AWS Test') {
             steps {
+                sh 'whoami'
                 sh '''
                     docker run --rm \
                         -e AWS_ACCESS_KEY_ID=$ACCESS_KEY \
