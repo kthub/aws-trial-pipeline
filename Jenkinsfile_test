@@ -31,6 +31,7 @@ pipeline {
         stage('Register Image') {
             environment {
                 ECR_ENDPT = '572065744477.dkr.ecr.ap-northeast-1.amazonaws.com'
+                /*
                 DOCKER_LOGIN_PWD = sh(script: '''
                     docker run --rm \
                         -e AWS_ACCESS_KEY_ID=$ACCESS_KEY \
@@ -38,9 +39,20 @@ pipeline {
                         -e AWS_DEFAULT_REGION=$REGION \
                         amazon/aws-cli:latest ecr get-login-password --region $REGION
                 ''', returnStdout: true).trim()
+                */
             }
             steps {
-                sh 'docker login -u AWS -p $DOCKER_LOGIN_PWD $ECR_ENDPT'
+                // docker login
+                sh '''
+                    docker run --rm \
+                        -e AWS_ACCESS_KEY_ID=$ACCESS_KEY \
+                        -e AWS_SECRET_ACCESS_KEY=$SECRET_KEY \
+                        -e AWS_DEFAULT_REGION=$REGION \
+                        amazon/aws-cli:latest ecr get-login-password | \
+                        docker login -u AWS --password-stdin $DOCKER_LOGIN_PWD $ECR_ENDPT
+                '''
+
+                //sh 'docker login -u AWS -p $DOCKER_LOGIN_PWD $ECR_ENDPT'
 
                 // version tag
                 //sh 'docker tag $APP_NAME:$APP_VERSION $ECR_ENDPT/$APP_NAME:$APP_VERSION'
