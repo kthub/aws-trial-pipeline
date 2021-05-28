@@ -40,7 +40,7 @@ pipeline {
                 ''', returnStdout: true).trim()
             }
             steps {
-                echo '$DOCKER_LOGIN_PWD'
+                echo "${$DOCKER_LOGIN_PWD}"
                 //sh 'docker login -u AWS -p $DOCKER_LOGIN_PWD $ECR_ENDPT'
 
                 // version tag
