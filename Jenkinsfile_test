@@ -17,7 +17,7 @@ pipeline {
         stage('AWS Test') {
             steps {
                 sh '''
-                    sudo docker run --rm \
+                    docker run --rm \
                         -e AWS_ACCESS_KEY_ID=$ACCESS_KEY \
                         -e AWS_SECRET_ACCESS_KEY=$SECRET_KEY \
                         amazon/aws-cli:latest ec2 describe-instances
